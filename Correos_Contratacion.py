@@ -1,5 +1,6 @@
-import os                                   ## Imports de paquetes para que el programa funcione
+## Imports de paquetes para que el programa funcione
 from pathlib import Path
+import os                                   
 import pandas as pd 
 from openpyxl import load_workbook
 import smtplib
@@ -48,24 +49,22 @@ for i in datos.index:  ##Loop para leer la informacion de las columnas del excel
     mes = get_mes(datos['Mes'][i])
     enviado = datos['Enviado'][i]
     path_contratista = os.getcwd()+ "\{}".format(mes) + "\{} {}".format(num_contrato, nombre) ##Carpeta del contratista
-    print(j)
 
   
     
     if enviado == False: ##Loop para enviar correos si en la columna del excel de enviados es falso
     
         msg = EmailMessage()
-        msg['Subject'] = 'DOCUMENTACION CONTRATO ESE UNIVERSITARIA DEL ATLANTICO'
+        msg['Subject'] = 'DOCUMENTACION CONTRATO ESE UNIVERSITARIA DEL ATLANTICO' ## Asunto del correo electronico
         msg['From'] = USUARIO_EMAIL
         msg['To'] = email.strip().lower() ##Email al cual se va a enviar el correo
 
-        msg.set_content('Señor(a) {},\nAdjunto se encuentra su informacion para radicar su cuenta de cobro:'.format(nombre))
+        msg.set_content('Señor(a) {},\nAdjunto se encuentra su informacion para radicar su cuenta de cobro:'.format(nombre)) ## Mensaje del correo electronico
         try: ##Try/except para que el codigo siga ejecutandose aun si el path_contratista no existe, si existe manda el correo si no sigue al siguiente contratista
             files = os.listdir(path_contratista) 
             for file in files: ## loop para adjuntar los archivos de la carpeta del contratista al correo
                 path_archivo = path_contratista + "\{}".format(str(file))
-                print(file)
-                if (str(file) == "APROBACION.pdf" ) or (str(file) == "CDP.pdf" ) or (str(file) == "CONTRATO.pdf" ) or (str(file) == "RP.pdf" ) :
+                if (str(file) == "APROBACION.pdf" ) or (str(file) == "CDP.pdf" ) or (str(file) == "CONTRATO.pdf" ) or (str(file) == "RP.pdf" ) : ## IF para atachar al correo solo los documentos con estos nombres
                     with open(path_archivo, "rb") as f:
                          file_data = f.read()
                          file_name = str(file)
@@ -79,7 +78,6 @@ for i in datos.index:  ##Loop para leer la informacion de las columnas del excel
             ws["E{}".format(str(j))] = "SI" ##Cambia la columna del excel Enviado de FALSO a SI
             wb.save(RUTA_LISTA_CONTRATISTAS) 
         except: 
-            print("carpeta no encontrada")
             ws["E{}".format(str(j))] = "CARPETA NO ENCONTRADA" ##Cambia la columna del excel a carpeta no encontrada
             wb.save(RUTA_LISTA_CONTRATISTAS) 
             j = j+1
