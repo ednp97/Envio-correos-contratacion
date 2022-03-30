@@ -33,7 +33,7 @@ def get_mes(mes):  ## Funcion para formatear el mes a como estar organizado en l
     return format_mes
 
 USUARIO_EMAIL = 'soportescontratacion@eseuniversitariadelatlantico.gov.co'  ## Email con el que se envia los correos
-CONTRASENA_EMAIL = 'Contratacion*2022' ##Contraseña del email (Si se cambia la contraseña del correo cambiar aqui tambien)
+CONTRASENA_EMAIL = 'S0p0rt3**2022.' ##Contraseña del email (Si se cambia la contraseña del correo cambiar aqui tambien)
 RUTA_LISTA_CONTRATISTAS = r"Lista_Contratistas.xlsx" ## Archivo excel de donde se saca la imformacion de los contratistas (siempre debe estar en la misma carpeta de donde corra el script/programa)
 
 datos = pd.read_excel(RUTA_LISTA_CONTRATISTAS) #variable para trabajar la informacion del excel
