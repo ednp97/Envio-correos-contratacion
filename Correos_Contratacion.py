@@ -32,9 +32,9 @@ def get_mes(mes):  ## Funcion para formatear el mes a como estar organizado en l
     format_mes = dic_mes.get(mes)
     return format_mes
 
-USUARIO_EMAIL = 'soportescontratacion@eseuniversitariadelatlantico.gov.co'  ## Email con el que se envia los correos
-CONTRASENA_EMAIL = 'S0p0rt3**2022.' ##Contraseña del email (Si se cambia la contraseña del correo cambiar aqui tambien)
-RUTA_LISTA_CONTRATISTAS = r"Lista_Contratistas.xlsx" ## Archivo excel de donde se saca la imformacion de los contratistas (siempre debe estar en la misma carpeta de donde corra el script/programa)
+USUARIO_EMAIL =   ## Email con el que se envia los correos
+CONTRASENA_EMAIL = 
+RUTA_LISTA_CONTRATISTAS = r"Lista_ContratistasP.xlsx" ## Archivo excel de donde se saca la imformacion de los contratistas (siempre debe estar en la misma carpeta de donde corra el script/programa)
 
 datos = pd.read_excel(RUTA_LISTA_CONTRATISTAS) #variable para trabajar la informacion del excel
 wb = load_workbook(RUTA_LISTA_CONTRATISTAS)
@@ -43,14 +43,15 @@ j = 2
 
 for i in datos.index:  ##Loop para leer la informacion de las columnas del excel por el nombre 
     
-    nombre = formatear_texto(datos['Nombre'][i])
-    email = datos['Email'][i]
-    num_contrato = formatear_texto(datos['Numero de contrato'][i]) 
+    numcont = formatear_texto(datos['NUM CONTRATO'][i])
+    nombre = formatear_texto(datos['NOMBRE'][i])
+    email = datos['Email'][i] 
     mes = get_mes(datos['Mes'][i])
     enviado = datos['Enviado'][i]
-    path_contratista = os.getcwd()+ "\{}".format(mes) + "\{} {}".format(num_contrato, nombre) ##Carpeta del contratista
+    nombrecarp = numcont + " "+nombre
+    path_contratista = os.getcwd() + "\{}".format(mes) + "\{}".format(nombrecarp) ##Carpeta del contratista
 
-  
+    print(path_contratista)
     
     if enviado == False: ##Loop para enviar correos si en la columna del excel de enviados es falso
     
@@ -59,12 +60,13 @@ for i in datos.index:  ##Loop para leer la informacion de las columnas del excel
         msg['From'] = USUARIO_EMAIL
         msg['To'] = email.strip().lower() ##Email al cual se va a enviar el correo
 
-        msg.set_content('Señor(a) {},\nAdjunto se encuentra su informacion para radicar su cuenta de cobro:'.format(nombre)) ## Mensaje del correo electronico
+        msg.set_content('Señor(a) {},\nAdjunto se encuentra su informacion para radicar su cuenta de cobro:'.format(nombre)) ## Mensaje del correo eletronico
         try: ##Try/except para que el codigo siga ejecutandose aun si el path_contratista no existe, si existe manda el correo si no sigue al siguiente contratista
             files = os.listdir(path_contratista) 
             for file in files: ## loop para adjuntar los archivos de la carpeta del contratista al correo
                 path_archivo = path_contratista + "\{}".format(str(file))
-                if (str(file) == "APROBACION.pdf" ) or (str(file) == "CDP.pdf" ) or (str(file) == "CONTRATO.pdf" ) or (str(file) == "RP.pdf" ) : ## IF para atachar al correo solo los documentos con estos nombres
+                print(file)
+                if (str(file) == "APROBACION.pdf") or (str(file) == "APROBACION .pdf") or (str(file) == "CDP .pdf" ) or (str(file) == "CDP.pdf" ) or (str(file) == "CONTRATO .pdf") or (str(file) == "CONTRATO.pdf") or (str(file) == "RP .pdf" ) or (str(file) == "RP.pdf" ) or (str(file) == "SUPERVISION .pdf" ) or (str(file) == "SUPERVISION.pdf" ) or (str(file) == "POLIZA.pdf" ) or (str(file) == "POLIZA .pdf" ): ## IF para atachar al correo solo los documentos con estos nombres
                     with open(path_archivo, "rb") as f:
                          file_data = f.read()
                          file_name = str(file)
@@ -78,7 +80,7 @@ for i in datos.index:  ##Loop para leer la informacion de las columnas del excel
             ws["E{}".format(str(j))] = "SI" ##Cambia la columna del excel Enviado de FALSO a SI
             wb.save(RUTA_LISTA_CONTRATISTAS) 
         except: 
-            ws["E{}".format(str(j))] = "CARPETA NO ENCONTRADA" ##Cambia la columna del excel a carpeta no encontrada
+            ws["E{}".format(str(j))] = "CARPETA NO ENCONTRADA/CORREO MAL ESCRITO" ##Cambia la columna del excel a carpeta no encontrada
             wb.save(RUTA_LISTA_CONTRATISTAS) 
             j = j+1
             continue
@@ -87,8 +89,4 @@ pyautogui.alert('Todos los correos han sido enviados', "Envio completado")
 
 ## PARA GUARDAR EL ARCHIVO COMO ".exe" CORRER COMANDO "pyinstaller --onefile --noconsole Correos_Contratacion.py"
 ## PRIMERO INSTALAR pyinstaller con "pip install pyinstaller"
-        
-
-
-            
-        
+## By EDNP
